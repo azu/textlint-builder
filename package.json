@@ -22,7 +22,7 @@
     "lib/"
   ],
   "scripts": {
-    "start": "node index.js",
+    "start": "./node_modules/node/node_modules/.bin/node index.js",
     "build": "textlint-compiler --outputDir dist",
     "test": "textlint README.md"
   },
