@@ -27,6 +27,7 @@
     "test": "textlint README.md"
   },
   "dependencies": {
+    "node": "14.2.0",
     "@textlint-ja/textlint-rule-no-insert-dropping-sa": "^1.0.1",
     "@textlint-rule/textlint-rule-no-unmatched-pair": "^1.0.7",
     "@textlint/compiler": "^0.1.2",
