@@ -36,8 +36,8 @@ app.get("/textlint.js", wrap(async (req, res) => {
         res.render("Can not compile");
         return;
     }
-    // res.setHeader('Content-disposition', 'attachment; filename=textlint.js');
-    // res.setHeader('Content-type', "text/javascript");
+    res.setHeader('Content-disposition', 'attachment; filename=textlint.js');
+    res.setHeader('Content-type', "text/javascript");
     const filestream = fs.createReadStream(path.join(outDir, "textlint.js"));
     filestream.pipe(res);
 }));
