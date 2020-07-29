@@ -1,0 +1,11 @@
+{
+  "filters": {},
+  "rules": {
+    "@textlint-ja/no-insert-dropping-sa": true,
+    "@textlint-rule/no-unmatched-pair": true,
+    "date-weekday-mismatch": true,
+    "no-hoso-kinshi-yogo": true,
+    "no-start-duplicated-conjunction": true,
+    "preset-japanese": true
+  }
+}

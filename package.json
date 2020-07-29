@@ -1,0 +1,42 @@
+{
+  "name": "textlint-builder",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/azu/textlint-builder",
+  "bugs": {
+    "url": "https://github.com/azu/textlint-builder/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/azu/textlint-builder.git"
+  },
+  "license": "MIT",
+  "author": "azu",
+  "main": "lib/textlint-builder.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "files": [
+    "bin/",
+    "lib/"
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "build": "textlint-compiler --outputDir dist",
+    "test": "textlint README.md"
+  },
+  "dependencies": {
+    "@textlint-ja/textlint-rule-no-insert-dropping-sa": "^1.0.1",
+    "@textlint-rule/textlint-rule-no-unmatched-pair": "^1.0.7",
+    "@textlint/compiler": "^0.1.2",
+    "textlint": "^11.7.6",
+    "textlint-rule-date-weekday-mismatch": "^1.0.5",
+    "textlint-rule-no-hoso-kinshi-yogo": "^1.2.2",
+    "textlint-rule-no-start-duplicated-conjunction": "^2.0.2",
+    "textlint-rule-preset-japanese": "^5.0.0"
+  },
+  "devDependencies": {
+    "express": "^4.17.1"
+  }
+}
