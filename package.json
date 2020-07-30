@@ -22,7 +22,7 @@
     "lib/"
   ],
   "scripts": {
-    "start": "rimraf dist && node_modules/.bin/node node_modules/.bin/node-dev index.js",
+    "start": "rimraf dist && node_modules/node/bin/node node_modules/.bin/node-dev index.js",
     "build": "textlint-compiler --outputDir dist",
     "test": "textlint README.md"
   },
