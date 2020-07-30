@@ -16,7 +16,7 @@ app.get("/textlint.js", wrap(async (req, res) => {
 
     if (fs.existsSync(outFile)) {
         res.set({ 'content-type': 'text/javascript; charset=utf-8' });
-        return fs.createReadStream(path.join(outDir, "textlint.js")).pipe(res);
+        return res.sendFile(path.join(outDir, "textlint.js"))
     }
     await compile({
         compileTarget: "webworker",
@@ -30,7 +30,7 @@ app.get("/textlint.js", wrap(async (req, res) => {
         return;
     }
     res.set({ 'content-type': 'text/javascript; charset=utf-8' });
-    return fs.createReadStream(path.join(outDir, "textlint.js")).pipe(res);
+    return res.sendFile(path.join(outDir, "textlint.js"));
 }));
 
 app.listen(8080, () => {
