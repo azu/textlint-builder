@@ -4,7 +4,6 @@ const express = require("express");
 const app = express();
 const { compile } = require("@textlint/compiler");
 
-const inmemoryCache = new Map();
 const wrap = fn => (req, res, next) => fn(req, res, next).catch(next);
 
 app.get("/", wrap(async (req, res) => {
