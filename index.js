@@ -20,7 +20,7 @@ app.get(
         const outFile = path.join(outDir, "textlint.js");
 
         if (fs.existsSync(outFile)) {
-            res.set({ "content-type": "text/javascript; charset=utf-8" });
+            res.setHeader('content-type', 'text/javascript');
             const content = await fs.promises.readFile(outFile, "utf-8");
             return res.send(content);
         }
@@ -35,7 +35,7 @@ app.get(
             res.render("Can not compile");
             return;
         }
-        res.set({ "content-type": "text/javascript; charset=utf-8" });
+        res.setHeader('content-type', 'text/javascript');
         const content = await fs.promises.readFile(outFile, "utf-8");
         return res.send(content);
     })

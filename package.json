@@ -22,7 +22,7 @@
     "lib/"
   ],
   "scripts": {
-    "start": "rimraf dist && node_modules/.bin/node index.js",
+    "start": "rimraf dist && node_modules/.bin/node node_modules/.bin/node-dev index.js",
     "build": "textlint-compiler --outputDir dist",
     "test": "textlint README.md"
   },
@@ -32,6 +32,7 @@
     "@textlint/compiler": "^0.1.2",
     "express": "^4.17.1",
     "node": "14.5.0",
+    "node-dev": "^5.1.0",
     "rimraf": "^3.0.2",
     "textlint": "^11.7.6",
     "textlint-rule-date-weekday-mismatch": "^1.0.5",
