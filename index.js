@@ -4,27 +4,20 @@ const express = require("express");
 const app = express();
 const { compile } = require("@textlint/compiler");
 
+const inmemoryCache = new Map();
 const wrap = fn => (req, res, next) => fn(req, res, next).catch(next);
 
 app.get("/", wrap(async (req, res) => {
-    res.send(`<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>textlint compiler</title>
-</head>
-<body>
-
-<h1>Download <a href="/textlint.js">textlint.js</a></h1>
-
-</body>
-</html>`)
+    res.sendFile(__dirname + '/index.html');
 }));
 
 app.get("/textlint.js", wrap(async (req, res) => {
     const outDir = path.join(__dirname, "dist");
     const outFile = path.join(outDir, "textlint.js");
+
+    if (fs.existsSync(outFile)) {
+        return fs.createReadStream(path.join(outDir, "textlint.js")).pipe(res);
+    }
     await compile({
         compileTarget: "webworker",
         mode: "production",
@@ -36,10 +29,7 @@ app.get("/textlint.js", wrap(async (req, res) => {
         res.render("Can not compile");
         return;
     }
-    res.setHeader('Content-disposition', 'attachment; filename=textlint.js');
-    res.setHeader('Content-type', "text/javascript");
-    const filestream = fs.createReadStream(path.join(outDir, "textlint.js"));
-    filestream.pipe(res);
+    return fs.createReadStream(path.join(outDir, "textlint.js")).pipe(res);
 }));
 
 app.listen(8080, () => {

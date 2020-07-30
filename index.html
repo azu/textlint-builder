@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>textlint-builder</title>
+    <style>
+        .main {
+            width: 800px;
+            margin: auto;
+            position: relative;
+
+            display: flex;
+            align-items: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 10em;
+            font-size: 24px;
+        }
+
+        .side {
+            position: fixed;
+            font-size: 18px;
+            padding: 0.5em;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            background: #ddd;
+        }
+
+        .download {
+            width: 800px;
+            margin: auto;
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            align-content: center;
+        }
+
+        .download-link {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+<main class="main">
+    <textarea class="textarea">お刺身が食べれない！寿司は食べられる。東京特許許可局は難しい漢字だ。
+
+今すぐ行動することができる。
+    </textarea>
+</main>
+<div class="download">
+    <p><a href="textlint.js" download="textlint.js" class="download-link">Download textlint.js</a></p>
+</div>
+<aside class="side">
+    <div id="js-status" class="status"></div>
+</aside>
+<script type="module">
+    import { attachToTextArea } from "https://cdn.skypack.dev/textchecker-element";
+
+    const updateStatus = (status) => {
+        document.querySelector("#js-status").textContent = status;
+    };
+    const worker = new Worker("textlint.js");
+    const waiterForInit = (worker) => {
+        let initialized = false;
+        let _resolve = null;
+        const deferred = new Promise((resolve) => {
+            _resolve = resolve;
+        });
+        worker.addEventListener(
+            "message",
+            function (event) {
+                const data = event.data;
+                if (data.command === "init") {
+                    initialized = true;
+                    _resolve && _resolve(initialized);
+                }
+            },
+            {
+                once: true
+            }
+        );
+        return {
+            ready() {
+                return deferred;
+            }
+        };
+    };
+
+    const workerStatus = waiterForInit(worker);
+
+    const createTextlint = ({ ext }) => {
+        const lintText = async ({ text }) => {
+            updateStatus("linting...");
+            return new Promise((resolve, _reject) => {
+                worker.addEventListener(
+                    "message",
+                    function (event) {
+                        const data = event.data;
+                        if (data.command === "lint:result") {
+                            resolve(data.result);
+                        }
+                        updateStatus("linted");
+                    },
+                    {
+                        once: true
+                    }
+                );
+                return worker.postMessage({
+                        command: "lint",
+                        text,
+                        ext: ext
+                    }
+                );
+            });
+        };
+        const fixText = async ({
+                                   text,
+                                   message
+                               }) => {
+            updateStatus("fixing...");
+            return new Promise((resolve, _reject) => {
+                worker.addEventListener(
+                    "message",
+                    function (event) {
+                        const data = event.data;
+                        if (data.command === "fix:result") {
+                            resolve(data.result);
+                        }
+                        updateStatus("fixed");
+                    },
+                    {
+                        once: true
+                    }
+                );
+                return worker.postMessage({
+                    command: "fix",
+                    text,
+                    ruleId: message.ruleId,
+                    ext: ext
+                });
+            });
+        };
+        return {
+            lintText,
+            fixText
+        };
+    };
+
+    (async () => {
+        const targetElement = document.querySelectorAll("textarea");
+        const textlint = createTextlint({ ext: ".md" });
+        updateStatus("initializing");
+        await workerStatus.ready();
+        targetElement.forEach((element) => {
+            attachToTextArea({
+                textAreaElement: element,
+                lintingDebounceMs: 200,
+                lintText: textlint.lintText,
+                fixText: textlint.fixText
+            });
+        });
+    })();
+
+</script>
+</body>
+</html>
