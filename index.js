@@ -1,11 +1,17 @@
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
-const app = express();
 const { compile } = require("@textlint/compiler");
+const app = express();
 
 const wrap = fn => (req, res, next) => fn(req, res, next).catch(next);
-
+/**
+ * Workaround for CodeSandbox
+ * @see https://twitter.com/azu_re/status/1289238077139906561
+ */
+const escapeCodeSandbox = (code) => {
+    return code.replace(/<\/head>/g, "< /head>");
+}
 app.get(
     "/",
     wrap(async (req, res) => {
@@ -13,18 +19,14 @@ app.get(
     })
 );
 
+app.use("/dist", express.static(__dirname + "/dist"));
 app.get(
     "/textlint.js",
     wrap(async (req, res) => {
         const outDir = path.join(__dirname, "dist");
         const outFile = path.join(outDir, "textlint.js");
-
         if (fs.existsSync(outFile)) {
-            res.setHeader("Cache-Control", "no-transform");
-            res.setHeader("X-Content-Type-Options", "nosniff");
-            res.setHeader("content-type", "application/javascript");
-            const content = await fs.promises.readFile(outFile, "utf-8");
-            return res.send(content);
+            return res.redirect("/dist/textlint.js");
         }
         await compile({
             compileTarget: "webworker",
@@ -37,11 +39,10 @@ app.get(
             res.render("Can not compile");
             return;
         }
-        res.setHeader("Cache-Control", "no-transform");
-        res.setHeader("X-Content-Type-Options", "nosniff");
-        res.setHeader("content-type", "application/javascript");
         const content = await fs.promises.readFile(outFile, "utf-8");
-        return res.send(content);
+        const escapedContent = escapeCodeSandbox(content);
+        await fs.promises.writeFile(escapedContent, "utf-8");
+        return res.redirect("/dist/textlint.js");
     })
 );
 
