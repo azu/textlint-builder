@@ -30,7 +30,7 @@
   "dependencies": {
     "@textlint-ja/textlint-rule-no-insert-dropping-sa": "^1.0.1",
     "@textlint-rule/textlint-rule-no-unmatched-pair": "^1.0.7",
-    "@textlint/compiler": "^0.1.2",
+    "@textlint/compiler": "^0.2.2",
     "express": "^4.17.1",
     "node": "14.5.0",
     "node-dev": "^5.1.0",
