@@ -22,8 +22,7 @@
     "lib/"
   ],
   "scripts": {
-    "postinstall": "yarn --check-files --ignore-scripts",
-    "start": "rimraf dist && yarn node node_modules/.bin/node-dev index.js",
+    "start": "rimraf dist && npx node node_modules/.bin/node-dev index.js",
     "localstart": "rimraf dist && node-dev index.js",
     "build": "textlint-compiler --outputDir dist",
     "test": "textlint README.md"
