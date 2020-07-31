@@ -26,7 +26,7 @@ app.get(
         }
         await compile({
             compileTarget: "webworker",
-            mode: "production",
+            mode: "development",
             configFilePath: path.join(__dirname, ".textlintrc.json"),
             outputDir: outDir
         });
