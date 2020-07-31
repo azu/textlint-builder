@@ -20,7 +20,9 @@ app.get(
         const outFile = path.join(outDir, "textlint.js");
 
         if (fs.existsSync(outFile)) {
-            res.setHeader('content-type', 'text/javascript');
+            res.setHeader("Cache-Control", "no-transform");
+            res.setHeader("X-Content-Type-Options", "nosniff");
+            res.setHeader("content-type", "application/javascript");
             const content = await fs.promises.readFile(outFile, "utf-8");
             return res.send(content);
         }
@@ -35,7 +37,9 @@ app.get(
             res.render("Can not compile");
             return;
         }
-        res.setHeader('content-type', 'text/javascript');
+        res.setHeader("Cache-Control", "no-transform");
+        res.setHeader("X-Content-Type-Options", "nosniff");
+        res.setHeader("content-type", "application/javascript");
         const content = await fs.promises.readFile(outFile, "utf-8");
         return res.send(content);
     })
